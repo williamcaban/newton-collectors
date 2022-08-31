@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: node-exporter-custom
+  name: node-exporter-custom
+  namespace: newton
+spec:
+  ports:
+  - name: exporter-custom
+    port: 9100
+    protocol: TCP
+    targetPort: 9100
+  selector:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: node-exporter-custom

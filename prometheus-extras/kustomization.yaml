@@ -1,0 +1,10 @@
+commonLabels:
+  telco.shift.zone/app: newton
+
+resources:
+- 00-namespace.yaml
+- 01-serivce-account.yaml
+- 02-cluster-role-binding.yaml
+- 03-node-exporter-custom-ds.yaml
+- 04-service.yaml
+- 05-service-monitor.yaml

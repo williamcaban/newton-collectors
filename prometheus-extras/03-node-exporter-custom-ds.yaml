@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: node-exporter-custom
+  name: node-exporter-custom
+  namespace: newton
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: node-exporter-custom
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: node-exporter
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: node-exporter-custom
+    spec:
+      containers:
+      # https://github.com/prometheus/node_exporter
+      - args:
+        - --web.listen-address=0.0.0.0:9100
+        - --path.sysfs=/host/sys
+        - --path.rootfs=/host/root
+        - --collector.disable-defaults
+        - --collector.cpufreq
+        #- --collector.powersupplyclass
+        #- --collector.thermal_zone
+        #- --collector.interrupts
+        image: registry.redhat.io/openshift4/ose-prometheus-node-exporter
+        imagePullPolicy: IfNotPresent
+        name: node-exporter
+        ports:
+        # WARNING: This is open to everyone 
+        - containerPort: 9100
+          name: exporter-custom
+        resources:
+          requests:
+            cpu: 8m
+            memory: 32Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /host/sys
+          mountPropagation: HostToContainer
+          name: sys
+          readOnly: true
+        - mountPath: /host/root
+          mountPropagation: HostToContainer
+          name: root
+          readOnly: true
+        - mountPath: /var/node_exporter/textfile
+          name: node-exporter-textfile
+          readOnly: true
+        workingDir: /var/node_exporter/textfile        
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      securityContext: {}
+      serviceAccount: node-exporter-custom
+      serviceAccountName: node-exporter-custom
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - operator: Exists
+      volumes:
+      - hostPath:
+          path: /sys
+          type: ""
+        name: sys
+      - hostPath:
+          path: /
+          type: ""
+        name: root
+      - emptyDir: {}
+        name: node-exporter-textfile
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 10%
+    type: RollingUpdate
