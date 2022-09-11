@@ -1,0 +1,29 @@
+---
+#ConfgMap to setup parameters for cluster level monitoring.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    # Enable user workload montoring
+    enableUserWorkload: true
+    prometheusK8s:
+      # Keep data stored for 15 days
+      # retention: 15d
+      externalLabels:
+        smartops_source: cluster-monitoring
+        smartops: newton
+      remoteWrite:
+        - url: "http://prometheus-kafka-adapter.prom-kafka-adapter.svc.cluster.local:8080/receive"
+          writeRelabelConfigs:
+          - sourceLabels:
+            - __tmp_openshift_cluster_id__ 
+            targetLabel: cluster_id 
+            action: replace 
+          - sourceLabels: [__name__]
+            regex: "node_cpu(.*)|node_hwmon(.*)|node_intr_total|node_load(.*)|node_memory(.*)|kube_pod_info|kube_node_container(.*)|kube_node_status(.*)"
+            action: keep
+    # alertmanagerMain:
+    #   retention: 15d

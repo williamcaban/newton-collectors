@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-certs
+  namespace: prom-kafka-adapter
+# Obtain ca-bundle.crt, tls.key and tls.crt from target Kafka
+# Use the contents of those files as is (not conversion to base64)
+# to create the data for the config map
+data:
+  ca-bundle.crt: |
+    -----BEGIN CERTIFICATE-----
+    ...
+    -----END CERTIFICATE-----
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    ...
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN PRIVATE KEY-----
+    ...
+    -----END PRIVATE KEY-----
