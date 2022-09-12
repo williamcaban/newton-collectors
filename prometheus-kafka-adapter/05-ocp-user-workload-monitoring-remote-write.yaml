@@ -25,9 +25,7 @@ data:
             action: replace 
           - sourceLabels: [__name__]
             # https://github.com/sustainable-computing-io/kepler/blob/424d2f88d2c050a354c023e8b830afefd312baf4/pkg/collector/collector.go#L28-L43
-            regex: "pod_(.*)|node_(.*)"
-            #regex: "node_energy_stat|pod_energy_stat|node_hwmon_energy_joule_total|node_cpu_scaling_frequency_hertz|node_package_energy_millijoule|pod_cpu_cpu_time_us"
-            #regex: 'node_cpu* | node_hwmon* | node_intr_total | node_load* | node_memory* | kube_pod_info | kube_node_container* | kube_node_status*'
+            regex: "pod_energy_stat|pod_total_energy_millijoule|pod_total_(.*)|pod_curr_(.*)|node_energy_stat|node_(.*)"
             action: keep
     # thanosRuler:
     #   retention: 15d

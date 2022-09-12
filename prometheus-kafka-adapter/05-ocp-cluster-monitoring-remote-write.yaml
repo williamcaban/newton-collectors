@@ -23,7 +23,7 @@ data:
             targetLabel: cluster_id 
             action: replace 
           - sourceLabels: [__name__]
-            regex: "node_cpu(.*)|node_hwmon(.*)|node_intr_total|node_load(.*)|node_memory(.*)|kube_pod_info|kube_node_container(.*)|kube_node_status(.*)"
+            regex: "node_cpu_(.*)|node_hwmon_(.*)|node_intr_total|node_load(.*)|node_memory(.*)|pod_(.*)|kube_pod_info|kube_pod_labels|kube_node_container(.*)|kube_node_status(.*)"
             action: keep
     # alertmanagerMain:
     #   retention: 15d
