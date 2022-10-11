@@ -3,25 +3,9 @@ apiVersion: v1
 metadata:
   name: telegraf-config
   namespace: newton
-  uid: 596085fc-0ea7-45ca-9da0-d82a11bf4d23
-  resourceVersion: '9860531'
-  creationTimestamp: '2022-09-30T06:05:32Z'
   labels:
-    kubernetes.io/metadata.name: newton
-  managedFields:
-    - manager: Mozilla
-      operation: Update
-      apiVersion: v1
-      time: '2022-09-30T06:23:13Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:data':
-          .: {}
-          'f:telegraf.conf': {}
-        'f:metadata':
-          'f:labels':
-            .: {}
-            'f:kubernetes.io/metadata.name': {}
+    app.kubernetes.io/component: telegraf
+    app.kubernetes.io/name: prometheus-telegraf-custom
 data:
   telegraf.conf: |-
     [[processors.regex]]
