@@ -355,8 +355,8 @@ panels:
     measurement: idrac-hosts
     orderByTime: ASC
     policy: default
-    query: SELECT "bios-version" FROM "idrac-hosts" WHERE ("system-name" =~ /^$idrac_host$/)
-      AND $timeFilter GROUP BY "system-name" LIMIT 1
+    query: max(idrac_hosts_system_globalstatus)
+
     rawQuery: false
     refId: B
     resultFormat: table
@@ -462,7 +462,7 @@ panels:
     mode: discrete
     thresholds:
     - "$$hashKey": object:2501
-      color: "#FF780A"
+      color: "#fe9946"
       tooltip: Other
       value: '1'
     - "$$hashKey": object:2508
@@ -738,8 +738,9 @@ panels:
     measurement: idrac-hosts
     orderByTime: ASC
     policy: default
-    query: SELECT "power-state" FROM "esxi-01-idrac" WHERE $timeFilter
-    rawQuery: false
+    query: count(sort(idrac_hosts_power_state{idrac_hosts_system_globalstatus=""}))
+
+    rawQuery: true
     refId: A
     resultFormat: time_series
     select:
