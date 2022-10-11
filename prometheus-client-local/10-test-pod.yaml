@@ -1,0 +1,53 @@
+---
+# Example of Pod using downwards API and service account
+# to access prometheus local instance as client
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  serviceAccountName: prometheus-client-local
+  restartPolicy: Never
+  containers:
+    - name: test-container
+      image: registry.access.redhat.com/ubi8/ubi:latest
+      command:
+      - /usr/bin/bash
+      - -exc
+      - |
+        #set +x
+        echo -en '\n'
+        echo $(date) 
+        echo "NODE:" ${NODE_NAME}
+        echo "NAMESPACE:" ${POD_NAMESPACE}
+        echo "SERVICE ACCOUNT:" ${POD_SERVICE_ACCOUNT}
+        echo "POD NAME:" ${MY_POD_NAME} "POD IP:" ${MY_POD_IP}
+        echo "TOKEN" $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+        export TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+        while true ; do
+            echo "##### METRICS"
+            /usr/bin/curl -sk -H "Authorization: Bearer ${TOKEN}" "https://thanos-querier.openshift-monitoring.svc:9092/api/v1/query?query=up&namespace=${POD_NAMESPACE}"
+            sleep 10
+        done
+      env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
+
