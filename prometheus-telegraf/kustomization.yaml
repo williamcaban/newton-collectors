@@ -1,5 +1,5 @@
 commonLabels:
-  telco.shift.zone/app: newton
+  telco.shift.zone/app: newton #or netwon-develop
 
 resources:
 # - optional-namespace.yaml
