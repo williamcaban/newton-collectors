@@ -1,0 +1,10 @@
+commonLabels:
+  telco.shift.zone/app: newton
+
+resources:
+# - optional-namespace.yaml
+- 11-serivce-account.yaml
+- 12-cluster-role-binding.yaml
+- 13-prometheus-telegraf-idrac-ds.yaml
+- 14-telegraf-service.yaml
+- 15-service-monitor.yaml
