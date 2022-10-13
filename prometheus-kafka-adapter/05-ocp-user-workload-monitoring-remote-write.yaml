@@ -25,7 +25,7 @@ data:
             action: replace 
           - sourceLabels: [__name__]
             # https://github.com/sustainable-computing-io/kepler/blob/424d2f88d2c050a354c023e8b830afefd312baf4/pkg/collector/collector.go#L28-L43
-            regex: "pod_energy_stat|pod_total_energy_millijoule|pod_total_(.*)|pod_curr_(.*)|node_energy_stat|node_(.*)"
+            regex: "pod_energy_stat|pod_total_energy_millijoule|pod_total_(.*)|pod_curr_(.*)|node_energy_stat|node_(.*)|idrac_(.*)"
             action: keep
     # thanosRuler:
     #   retention: 15d
