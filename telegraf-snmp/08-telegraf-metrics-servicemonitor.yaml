@@ -9,7 +9,7 @@ metadata:
 spec:
   endpoints:
   - interval: 5s
-    port: telegraf
+    port: metrics
     relabelings:
     - action: replace
       regex: (.*)
