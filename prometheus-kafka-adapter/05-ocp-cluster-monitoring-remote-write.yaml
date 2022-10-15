@@ -25,7 +25,7 @@ data:
           - sourceLabels: [__name__]
             #regex: "node_cpu_(.*)|node_hwmon_(.*)|node_intr_total|node_load(.*)|node_memory(.*)|pod_(.*)|kube_pod_info|kube_pod_labels|kube_node_container(.*)|kube_node_status(.*)"
             # Without pods labels
-            regex: "node_cpu_(.*)|node_hwmon_(.*)|node_intr_total|node_load(.*)|node_memory(.*)|pod_(.*)|kube_pod_info|kube_node_container(.*)|kube_node_status(.*)|idrac_(.*)"
+            regex: "node_cpu_(.*)|node_hwmon_(.*)|node_intr_total|node_load(.*)|node_memory(.*)|pod_(.*)|kube_pod_info|kube_node_container(.*)|kube_node_status(.*)"
             action: keep
     # alertmanagerMain:
     #   retention: 15d

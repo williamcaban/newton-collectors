@@ -15,9 +15,6 @@ spec:
     matchLabels:
       app: prometheus-kafka-adapter
   strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
     type: RollingUpdate
   template:
     metadata:
@@ -33,7 +30,7 @@ spec:
         terminationMessagePolicy: File
         env:
         - name: KAFKA_BROKER_LIST
-          value: kafka-newton-kafka-bootstrap.newton-odh.svc.cluster.local:9092
+          value: newton-kafka-kafka-bootstrap.newton-kafka.svc.cluster.local:9092
         - name: KAFKA_TOPIC
           value: newton-ocp
         # - name: KAFKA_SSL_CA_CERT_FILE
