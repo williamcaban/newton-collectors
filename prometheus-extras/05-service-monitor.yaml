@@ -2,8 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/component: exporter
-    app.kubernetes.io/name: node-exporter-custom
+    #app.kubernetes.io/component: exporter
+    #app.kubernetes.io/name: node-exporter-custom
+    smartops: newton
   name: node-exporter-custom
   namespace: newton
 spec:
@@ -17,7 +18,7 @@ spec:
       replacement: $1
       sourceLabels:
       - __meta_kubernetes_pod_node_name
-      targetLabel: instance
+      targetLabel: pod_node_name
   jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:

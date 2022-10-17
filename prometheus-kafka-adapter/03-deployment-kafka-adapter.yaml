@@ -22,7 +22,7 @@ spec:
         app: prometheus-kafka-adapter
     spec:
       containers:
-      - image: telefonica/prometheus-kafka-adapter:1.7.0
+      - image: telefonica/prometheus-kafka-adapter:1.8.0
         imagePullPolicy: IfNotPresent
         name: prometheus-kafka-adapter
         resources: {}
