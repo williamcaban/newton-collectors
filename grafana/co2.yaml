@@ -1,0 +1,679 @@
+---
+annotations:
+  list:
+  - builtIn: 1
+    datasource:
+      type: datasource
+      uid: grafana
+    enable: true
+    hide: true
+    iconColor: rgba(0, 211, 255, 1)
+    name: Annotations & Alerts
+    target:
+      limit: 100
+      matchAny: false
+      tags: []
+      type: dashboard
+    type: dashboard
+description: Dashboard for Kepler Exporter
+editable: true
+fiscalYearStartMonth: 0
+graphTooltip: 0
+id: 3
+links: []
+liveNow: false
+panels:
+- collapsed: false
+  datasource:
+    type: prometheus
+    uid: 7tfubjI4k
+  gridPos:
+    h: 1
+    w: 24
+    x: 0
+    y: 0
+  id: 11
+  panels: []
+  targets:
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    refId: A
+  title: Carbon Emissions
+  type: row
+- datasource:
+    type: prometheus
+    uid: 7tfubjI4k
+  fieldConfig:
+    defaults:
+      color:
+        mode: palette-classic
+      custom:
+        axisCenteredZero: false
+        axisColorMode: series
+        axisGridShow: true
+        axisLabel: ''
+        axisPlacement: auto
+        barAlignment: 0
+        drawStyle: line
+        fillOpacity: 16
+        gradientMode: opacity
+        hideFrom:
+          legend: false
+          tooltip: false
+          viz: false
+        lineInterpolation: linear
+        lineStyle:
+          fill: solid
+        lineWidth: 1
+        pointSize: 5
+        scaleDistribution:
+          type: linear
+        showPoints: auto
+        spanNulls: false
+        stacking:
+          group: A
+          mode: normal
+        thresholdsStyle:
+          mode: 'off'
+      mappings: []
+      thresholds:
+        mode: absolute
+        steps:
+        - color: green
+          value:
+        - color: red
+          value: 80
+    overrides:
+    - __systemRef: hideSeriesFrom
+      matcher:
+        id: byNames
+        options:
+          mode: exclude
+          names:
+          - "delta(sum(pod_curr_energy_millijoule{pod_namespace='system'})[10m:])\n\n"
+          prefix: 'All except:'
+          readOnly: true
+      properties:
+      - id: custom.hideFrom
+        value:
+          legend: false
+          tooltip: false
+          viz: true
+  gridPos:
+    h: 13
+    w: 21
+    x: 0
+    y: 1
+  id: 14
+  options:
+    legend:
+      calcs: []
+      displayMode: list
+      placement: bottom
+      showLegend: true
+    tooltip:
+      mode: multi
+      sort: asc
+  pluginVersion: 9.1.0
+  targets:
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    expr: "delta(sum(pod_curr_energy_millijoule{pod_namespace='$namespace'})[10m:])\n\n"
+    legendFormat: __auto
+    range: true
+    refId: A
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    expr: "predict_linear(sum(pod_curr_energy_millijoule{pod_namespace='$namespace'})[4h:],
+      3600)\n\n"
+    hide: false
+    legendFormat: __auto
+    range: true
+    refId: B
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    expr: "sum by (pod_namespace) (sum_over_time(pod_curr_energy_in_pkg_millijoule[24h])*15/3/3600000000)\n\n"
+    hide: false
+    legendFormat: __auto
+    range: true
+    refId: C
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    expr: "deriv(sum(pod_curr_energy_millijoule{pod_node_name='$pod',pod_namespace='$namespace'})[10m:])\n\n"
+    hide: false
+    legendFormat: __auto
+    range: true
+    refId: D
+  title: Kepler Tests
+  type: timeseries
+- datasource:
+    type: prometheus
+    uid: 7tfubjI4k
+  description: Using CO2 emissions  by power generation type as reported by US Energy
+    Information Administration https://www.eia.gov/tools/faqs/faq.php?id=74&t=11
+  fieldConfig:
+    defaults:
+      color:
+        mode: thresholds
+      mappings: []
+      thresholds:
+        mode: percentage
+        steps:
+        - color: green
+          value:
+        - color: "#EAB839"
+          value: 60
+        - color: red
+          value: 80
+    overrides: []
+  gridPos:
+    h: 11
+    w: 21
+    x: 0
+    y: 14
+  id: 12
+  options:
+    displayMode: lcd
+    minVizHeight: 10
+    minVizWidth: 0
+    orientation: horizontal
+    reduceOptions:
+      calcs:
+      - lastNotNull
+      fields: ''
+      values: false
+    showUnfilled: true
+  pluginVersion: 9.1.0
+  targets:
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    exemplar: true
+    expr: "sum(rate(pod_curr_energy_millijoule{pod_namespace='$namespace'}[24h])/(20*60*24)/3600000000*$coal)\n "
+    instant: false
+    interval: ''
+    legendFormat: CO2 Coal
+    refId: A
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    exemplar: true
+    expr: sum(rate(pod_curr_energy_millijoule{pod_namespace='$namespace'}[24h])/(20*60*24)/3600000000*$petroleum)
+    hide: false
+    interval: ''
+    legendFormat: CO2 Petroleum
+    range: true
+    refId: B
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    exemplar: true
+    expr: sum(rate(pod_curr_energy_millijoule{pod_namespace='$namespace'}[24h])/(20*60*24)/3600000000*$natural_gas)
+    hide: false
+    interval: ''
+    legendFormat: CO2 Natural Gas
+    range: true
+    refId: C
+  title: Namespace Carbon Footprint (pounds per kWh in 24hrs)
+  transparent: true
+  type: bargauge
+- collapsed: false
+  datasource:
+    type: prometheus
+    uid: 7tfubjI4k
+  gridPos:
+    h: 1
+    w: 24
+    x: 0
+    y: 25
+  id: 8
+  panels: []
+  targets:
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    refId: A
+  title: Energy Consumption
+  type: row
+- datasource:
+    type: prometheus
+    uid: 7tfubjI4k
+  description: The mW per minute
+  fieldConfig:
+    defaults:
+      color:
+        mode: palette-classic
+      custom:
+        axisCenteredZero: false
+        axisColorMode: text
+        axisLabel: ''
+        axisPlacement: auto
+        barAlignment: 0
+        drawStyle: line
+        fillOpacity: 0
+        gradientMode: none
+        hideFrom:
+          graph: false
+          legend: false
+          tooltip: false
+          viz: false
+        lineInterpolation: linear
+        lineWidth: 1
+        pointSize: 5
+        scaleDistribution:
+          type: linear
+        showPoints: auto
+        spanNulls: false
+        stacking:
+          group: A
+          mode: none
+        thresholdsStyle:
+          mode: 'off'
+      mappings: []
+      thresholds:
+        mode: absolute
+        steps:
+        - color: green
+          value:
+        - color: red
+          value: 80
+    overrides: []
+  gridPos:
+    h: 9
+    w: 12
+    x: 0
+    y: 26
+  id: 2
+  options:
+    legend:
+      calcs: []
+      displayMode: list
+      placement: bottom
+      showLegend: true
+    tooltip:
+      mode: single
+      sort: none
+  targets:
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    editorMode: code
+    exemplar: true
+    expr: rate(pod_curr_energy_millijoule{pod_namespace="$namespace", pod_name="$pod"}[1m])/20
+    interval: ''
+    legendFormat: Total
+    range: true
+    refId: A
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    editorMode: code
+    exemplar: true
+    expr: rate(pod_curr_energy_millijoule{pod_namespace="$namespace", pod_name="$pod"}[1m])/20
+    hide: false
+    interval: ''
+    legendFormat: CPU
+    range: true
+    refId: B
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    exemplar: true
+    expr: rate(pod_dram_energy_current{pod_namespace="$namespace", pod_name="$pod"}[1m])/20
+    hide: false
+    interval: ''
+    legendFormat: DRAM
+    refId: C
+  title: Pod Current Energy Consumption (mW)
+  type: timeseries
+- datasource:
+    type: prometheus
+    uid: 7tfubjI4k
+  description: Total kW Consumed
+  fieldConfig:
+    defaults:
+      color:
+        mode: palette-classic
+      custom:
+        axisCenteredZero: false
+        axisColorMode: text
+        axisLabel: ''
+        axisPlacement: auto
+        barAlignment: 0
+        drawStyle: line
+        fillOpacity: 0
+        gradientMode: none
+        hideFrom:
+          graph: false
+          legend: false
+          tooltip: false
+          viz: false
+        lineInterpolation: linear
+        lineWidth: 1
+        pointSize: 5
+        scaleDistribution:
+          type: linear
+        showPoints: auto
+        spanNulls: false
+        stacking:
+          group: A
+          mode: none
+        thresholdsStyle:
+          mode: 'off'
+      mappings: []
+      thresholds:
+        mode: absolute
+        steps:
+        - color: green
+          value:
+        - color: red
+          value: 80
+    overrides:
+    - __systemRef: hideSeriesFrom
+      matcher:
+        id: byNames
+        options:
+          mode: exclude
+          names:
+          - '{pod_namespace="newton-odh"}'
+          prefix: 'All except:'
+          readOnly: true
+      properties:
+      - id: custom.hideFrom
+        value:
+          legend: false
+          tooltip: false
+          viz: true
+  gridPos:
+    h: 9
+    w: 12
+    x: 12
+    y: 26
+  id: 3
+  options:
+    legend:
+      calcs: []
+      displayMode: list
+      placement: bottom
+      showLegend: true
+    tooltip:
+      mode: single
+      sort: none
+  pluginVersion: 7.5.15
+  targets:
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    editorMode: code
+    exemplar: true
+    expr: rate(pod_curr_energy_millijoule{pod_namespace="$namespace", pod_name="$pod"}[24h])/(20*60*24)/3600000000
+    instant: false
+    interval: ''
+    legendFormat: TOTAL {{pod_name}}
+    refId: A
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    editorMode: code
+    exemplar: true
+    expr: rate(pod_curr_energy_millijoule{pod_namespace="$namespace", pod_name="$pod"}[24h])/(20*60*24)/3600000000
+    hide: false
+    instant: false
+    interval: ''
+    legendFormat: CPU {{pod_name}}
+    refId: B
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    editorMode: code
+    exemplar: true
+    expr: rate(pod_curr_energy_millijoule{pod_namespace="$namespace", pod_name="$pod"}[24h])/(20*60*24)/3600000000
+    hide: false
+    instant: false
+    interval: ''
+    legendFormat: DRAM {{pod_name}}
+    refId: C
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    expr: ''
+    hide: false
+    legendFormat: __auto
+    range: true
+    refId: D
+  - datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    editorMode: code
+    expr: "sum by (pod_namespace) (sum_over_time(pod_curr_energy_in_pkg_millijoule[24h])*15/3/3600000000)\n\n"
+    hide: false
+    legendFormat: __auto
+    range: true
+    refId: E
+  title: Total Pod Energy Consumption (kW) in 24hrs
+  transformations: []
+  type: timeseries
+- datasource:
+    type: prometheus
+    uid: 7tfubjI4k
+  description: ''
+  fieldConfig:
+    defaults:
+      color:
+        mode: thresholds
+      mappings: []
+      thresholds:
+        mode: absolute
+        steps:
+        - color: green
+          value:
+        - color: "#EAB839"
+          value: 1.5
+        - color: red
+          value: 3
+    overrides: []
+  gridPos:
+    h: 9
+    w: 12
+    x: 0
+    y: 35
+  id: 5
+  options:
+    displayMode: gradient
+    minVizHeight: 10
+    minVizWidth: 0
+    orientation: vertical
+    reduceOptions:
+      calcs:
+      - lastNotNull
+      fields: ''
+      values: false
+    showUnfilled: true
+    text: {}
+  pluginVersion: 9.1.0
+  targets:
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    editorMode: code
+    exemplar: true
+    expr: rate(pod_curr_energy_millijoule{pod_namespace="$namespace"}[24h])/(20*60*24)/3600000000
+    hide: false
+    interval: ''
+    legendFormat: "{{pod_name}}"
+    range: true
+    refId: A
+  title: Total Pod Energy Consumption (kW) in $namespace in 24hrs
+  type: bargauge
+- datasource: {}
+  description: ''
+  fieldConfig:
+    defaults:
+      color:
+        mode: thresholds
+      custom:
+        align: auto
+        displayMode: color-text
+        filterable: false
+        inspect: false
+      mappings: []
+      thresholds:
+        mode: absolute
+        steps:
+        - color: green
+          value:
+        - color: "#EAB839"
+          value: 10
+        - color: red
+          value: 20
+    overrides:
+    - matcher:
+        id: byName
+        options: pod_namespace
+      properties:
+      - id: displayName
+        value: Namespace
+      - id: custom.filterable
+        value: true
+    - matcher:
+        id: byName
+        options: Value
+      properties:
+      - id: displayName
+        value: kW
+      - id: custom.displayMode
+        value: lcd-gauge
+      - id: color
+        value:
+          mode: continuous-GrYlRd
+  gridPos:
+    h: 9
+    w: 12
+    x: 12
+    y: 35
+  id: 6
+  maxPerRow: 8
+  options:
+    footer:
+      fields: ''
+      reducer:
+      - sum
+      show: false
+    showHeader: true
+    sortBy:
+    - desc: true
+      displayName: kW
+  pluginVersion: 9.1.0
+  repeatDirection: h
+  targets:
+  - datasource:
+      type: prometheus
+      uid: "${DS_PROMETHEUS}"
+    editorMode: code
+    exemplar: true
+    expr: "sum by (pod_namespace) (\n    rate(pod_curr_energy_millijoule[24h])/(20*60*24)/3600000000\n) "
+    format: table
+    hide: false
+    instant: true
+    interval: ''
+    intervalFactor: 1
+    legendFormat: ''
+    refId: A
+  title: Total Energy Consumption (kW) by Namespace in 24hrs
+  type: table
+refresh: 5s
+schemaVersion: 37
+style: dark
+tags:
+- kepler
+- energy consumption
+templating:
+  list:
+  - current:
+      selected: true
+      text: system
+      value: system
+    datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    definition: label_values(pod_energy_stat, pod_namespace)
+    description: Namespace for pods to choose
+    hide: 0
+    includeAll: false
+    label: Namespace
+    multi: false
+    name: namespace
+    options: []
+    query:
+      query: label_values(pod_energy_stat, pod_namespace)
+      refId: StandardVariableQuery
+    refresh: 1
+    regex: ''
+    skipUrlSync: false
+    sort: 0
+    tagValuesQuery: ''
+    tagsQuery: ''
+    type: query
+    useTags: false
+  - current:
+      selected: true
+      text: system_processes
+      value: system_processes
+    datasource:
+      type: prometheus
+      uid: 7tfubjI4k
+    definition: label_values(pod_energy_stat{pod_namespace="$namespace"}, pod_name)
+    hide: 0
+    includeAll: false
+    label: Pod
+    multi: false
+    name: pod
+    options: []
+    query:
+      query: label_values(pod_energy_stat{pod_namespace="$namespace"}, pod_name)
+      refId: StandardVariableQuery
+    refresh: 1
+    regex: ''
+    skipUrlSync: false
+    sort: 0
+    tagValuesQuery: ''
+    tagsQuery: ''
+    type: query
+    useTags: false
+  - hide: 2
+    name: coal
+    query: '2.23'
+    skipUrlSync: false
+    type: constant
+  - hide: 2
+    name: natural_gas
+    query: '0.91'
+    skipUrlSync: false
+    type: constant
+  - hide: 2
+    name: petroleum
+    query: '2.13'
+    skipUrlSync: false
+    type: constant
+time:
+  from: now-5m
+  to: now
+timepicker: {}
+timezone: ''
+title: Kepler Exporter Dashboard
+uid: feedc0ffee
+version: 6
+weekStart: ''

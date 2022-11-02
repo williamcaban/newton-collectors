@@ -1,0 +1,17 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: telegraf
+    app.kubernetes.io/name: prometheus-telegraf-custom
+  name: prometheus-telegraf-custom
+spec:
+  ports:
+  - name: telegraf
+    port: 9126
+    protocol: TCP
+    targetPort: 9126
+  selector:
+    app.kubernetes.io/component: telegraf
+    app.kubernetes.io/name: prometheus-telegraf-custom
