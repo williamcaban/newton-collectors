@@ -177,6 +177,26 @@ data:
           conversion = "hwaddr"
           is_tag = true
 
+        [[inputs.snmp.table.field]]
+          # powerSupplyFQDD: 
+          #   Fully qualified device descriptor (FQDD) of the power supply.
+          name = "power-supply"
+          oid = "1.3.6.1.4.1.674.10892.5.4.600.12.1.15" 
+          is_tag = true
+
+        [[inputs.snmp.table.field]]
+          # powerSupplyRatedInputWattage: 
+          #   This attribute defines the rated input wattage of the power supply (in tenths of Watts).
+          name = "ps-input-watts"
+          oid = "1.3.6.1.4.1.674.10892.5.4.600.12.1.14"
+
+        [[inputs.snmp.table.field]]
+          # powerSupplyOutputWatts:
+          #   This attribute defines the maximum sustained output wattage of the power supply (in tenths of Watts)
+          name = "ps-out-watts"
+          oid  = ".1.3.6.1.4.1.674.10892.5.4.600.12.1.6"
+
+
       ### END TABLE
 
       [[inputs.snmp.field]]
@@ -226,7 +246,7 @@ data:
       [[inputs.snmp.field]]
         # amperageProbeReading:
         #   the value returned for this attribute is the power usage that the probe is reading in tenths of Amps.
-        name = "system-watts"
+        name = "system-amps"
         oid  = ".1.3.6.1.4.1.674.10892.5.4.600.30.1.6.1.3"
 
       ###########################################
@@ -243,6 +263,7 @@ data:
         # This is the maximum power the system can consume based on the current hardware configuration.
         name = "power-usage-max"
         oid = ".1.3.6.1.4.1.674.10892.5.4.600.60.1.16.1.1"
+
 
     [[outputs.file]]
       files = ["stdout", "/tmp/metrics.out"]
